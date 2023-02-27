@@ -1,35 +1,47 @@
-# This is a basic workflow to help you get started with Actions
+name: Build + Test + Deploy if main 
 
-name: CI
+on: [push]
 
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  test:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      
       - uses: actions/checkout@v3
-
-      # Deploy Bicep file
-      - name: deploy
-        uses: azure/arm-deploy@v1
+        
+      - name: Setup dotnet 6+7
+        uses: actions/setup-dotnet@v3
         with:
-        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        resourceGroupName: ${{ secrets.AZURE_RG }}
-        template: ./main.bicep
-        failOnStdErr: false
+          dotnet-version: |
+            6.x
+            7.x
+            
+      - name: Build and test
+        run: |
+            dotnet build apps/
+            dotnet test apps/
+  
+  deploy_if_main_branch:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    if: github.ref == 'refs/heads/master'
+    steps:
+      
+      - uses: actions/checkout@v3
+      
+      - name: Build and package with release configuration
+        run: |
+          dotnet build apps/ -c Release
+          dotnet publish apps/CoWork.RetroBot/ -c Release -o Publish/Package
+        
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+
+      - name: Deploy package to Azure Function
+        uses: Azure/functions-action@v1.4.8
+        with:
+          app-name: TestProject
+          package: Publish/Package
