@@ -18,8 +18,8 @@ jobs:
             
       - name: Build and test
         run: |
-            dotnet build apps/
-            dotnet test apps/
+            dotnet build
+            dotnet test
   
   deploy_if_main_branch:
     runs-on: ubuntu-latest
@@ -32,8 +32,8 @@ jobs:
       
       - name: Build and package with release configuration
         run: |
-          dotnet build apps/ -c Release
-          dotnet publish apps/CoWork.RetroBot/ -c Release -o Publish/Package
+          dotnet build -c Release
+          dotnet publish -c Release -o Publish/Package
         
       - name: Azure login
         uses: azure/login@v1
