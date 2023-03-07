@@ -44,9 +44,13 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{secrets.AZURE_CREDENTIALS}}
-
+      
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: Package
       - name: Deploy package to Azure Function
         uses: Azure/functions-action@v1.4.8
         with:
           app-name: TestProject
-          package: build/libs/Package
+          package: Package
