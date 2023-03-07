@@ -24,6 +24,11 @@ jobs:
         with:
           arguments: build
           build-root-directory: my.project
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Package
+          path: build/libs
+              
             
   
   deploy_if_main_branch:
@@ -34,12 +39,6 @@ jobs:
     steps:
       
       - uses: actions/checkout@v3
-
-      - name: Execute Gradle build
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: ./gradlew
-          build-root-directory: my.project
               
       - name: Azure login
         uses: azure/login@v1
