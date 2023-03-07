@@ -34,15 +34,11 @@ jobs:
     steps:
       
       - uses: actions/checkout@v3
-      
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+
       - name: Execute Gradle build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build
+          arguments: ./gradlew
           build-root-directory: my.project
               
       - name: Azure login
