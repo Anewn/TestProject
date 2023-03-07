@@ -47,8 +47,6 @@ jobs:
       
       - name: Download a single artifact
         uses: actions/download-artifact@v3
-        with:
-          name: build/libs/Package
       - name: Deploy package to Azure Function
         uses: Azure/functions-action@v1.4.8
         with:
