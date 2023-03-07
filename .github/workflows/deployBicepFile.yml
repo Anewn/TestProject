@@ -9,17 +9,19 @@ jobs:
       
       - uses: actions/checkout@v3
         
-      - name: Setup dotnet 6+7
-        uses: actions/setup-dotnet@v3
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
         with:
-          dotnet-version: |
-            6.x
-            7.x
+          java-version: '17'
+          distribution: 'oracle'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v2
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
             
-      - name: Build and test
-        run: |
-            dotnet build
-            dotnet test
   
   deploy_if_main_branch:
     runs-on: ubuntu-latest
