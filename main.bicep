@@ -4,7 +4,7 @@ param location string = resourceGroup().location
 module webappdeployment 'modules/webbapp.bicep' = {
   name: 'webappdeployment'
   params: {
-    webbappName: 'bicepwebapp'
+    webbappName: 'my.project'
     location: location
   }
 }
