@@ -16,7 +16,7 @@ jobs:
           distribution: 'oracle'
           cache: gradle         
       - name: Build with gradle
-        run: ./gradlew build 
+        run: gradle-project/./gradlew build 
               
             
   
