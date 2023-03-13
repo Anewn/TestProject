@@ -14,9 +14,13 @@ jobs:
         with:
           java-version: '17'
           distribution: 'oracle'
-          cache: gradle         
-      - name: Build with gradle
-        run: gradle-project/./gradlew build 
+          cache: gradle 
+
+      - name: Execute Gradle build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+          build-root-directory: gradle-project
               
             
   
